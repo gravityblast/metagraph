@@ -1,11 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"log"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/ethereum/go-ethereum/ethclient"
 )
+
+var logger *logrus.Entry
+
+func init() {
+	logger = logrus.New().WithField("app", "events-watcher")
+	// log.SetFormatter(&log.JSONFormatter{})
+}
 
 func main() {
 	config, err := parseConfig("config.json")
@@ -17,7 +25,6 @@ func main() {
 
 	for _, ec := range config.Events {
 		w := newWatcher(client, ec)
-		fmt.Printf("-------------------- %+v\n", ec.Description)
 		w.Run()
 	}
 }
