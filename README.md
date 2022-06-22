@@ -15,8 +15,8 @@ One way could be to allow the dapp to call a web service asking to pin a specifi
 against it:
 
 * the dapp needs to point to a centralized server, making it basically a centralized app.
-* the server needs to expose an API that anyone can spam even if an API key is used, since the API key would be in
-written clear in the client side dapp.
+* the server needs to expose an API that anyone can spam even if an API key is used, since the API key would be
+written in clear in the client side dapp.
 
 The other way we propose with Metagraph is to allow anyone to run a `metagraph` node that watches
 smart contracts events emitting a metadata pointer, and pin those files to a local or remote SAAS managed node,
