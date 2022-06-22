@@ -19,7 +19,7 @@ against it:
 written clear in the client side dapp.
 
 The other way we propose with Metagraph is to allow anyone to run a `metagraph` node that watches
-smart contracts events emitting a metadata pointer, and pin those file to a local or remote SAAS managed node,
+smart contracts events emitting a metadata pointer, and pin those files to a local or remote SAAS managed node,
 making the pinning process decentralized and permissionless.
 
 ## Build dependencies
@@ -65,7 +65,9 @@ Example:
 }
 ```
 
-Each event configuration describe how the Metadata Pointer is specified in an event emitted by a smart contract.
+Each event configuration describes how the Metadata Pointer is specified in an event emitted by a smart contract.
+
+The `contractName` field specifies the ABI file name stored in `abis/CONTRACT_NAME.json`.
 
 In particular, the Metadata Pointer can be specified in 3 ways:
 
@@ -165,3 +167,18 @@ config:
 ```
 make run
 ```
+
+## Todo
+
+- [X] Parse global configuration
+- [X] Parse configuration for each event
+- [X] Filter logs for each event/contract
+- [X] Filter logs from a specific block
+- [X] Parse event with MetaPointer struct
+- [X] Parse event with metadata protocol and metadata pointer
+- [X] Parse event with only metadata pointer
+- [X] Log all Metadata Pointer found
+- [ ] Call an external ipfs node/service to pin the file
+- [ ] Watch for future events instead of only filtering for past events
+- [ ] Save the last watched block for each event configuration
+- [ ] Create a "fork event configuration" to allow to watch contracts created from a factory
