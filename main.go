@@ -11,7 +11,7 @@ import (
 var logger *logrus.Entry
 
 func init() {
-	logger = logrus.New().WithField("app", "events-watcher")
+	logger = logrus.New().WithField("app", "metagraph")
 	// log.SetFormatter(&log.JSONFormatter{})
 }
 
@@ -22,6 +22,9 @@ func main() {
 	}
 
 	client, err := ethclient.Dial(config.ProviderURL)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	for _, ec := range config.Events {
 		w := newWatcher(client, ec)

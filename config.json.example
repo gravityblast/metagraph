@@ -1,0 +1,35 @@
+{
+  "providerURL": "wss://eth-goerli.alchemyapi.io/v2/API_KEY",
+  "events": [
+    {
+      "id": "project-metadata-updated",
+      "description": "Project Metadata Updated With MetaPtr Struct",
+      "contractName": "ProjectRegistry",
+      "contractAddress": "0xa449048290cf2c68c387ecf32847C59D9746C438",
+      "eventName": "MetadataUpdated",
+      "metaPointerField": "metaPtr",
+      "protocolField": "Protocol",
+      "pointerField": "Pointer",
+      "startingBlock": 7065923
+    },
+    {
+      "id": "project-metadata-updated-old",
+      "description": "Project Metadata Updated Old With `uint256 metadataProtocol, string metadataPointer`",
+      "contractName": "ProjectRegistryOld",
+      "contractAddress": "0x052e24dfb8de9b1d6de92a1dec1bb5dd11636f21",
+      "eventName": "MetadataUpdated",
+      "protocolField": "metadataProtocol",
+      "pointerField": "metadataPointer",
+      "startingBlock": 7065923
+    },
+    {
+      "id": "project-metadata-updated-old-2",
+      "description": "Project Metadata Updated Old With only `string metadataPointer`",
+      "contractName": "ProjectRegistryOld",
+      "contractAddress": "0x052e24dfb8de9b1d6de92a1dec1bb5dd11636f21",
+      "eventName": "MetadataUpdated",
+      "pointerField": "metadataPointer",
+      "startingBlock": 7065923
+    }
+  ]
+}

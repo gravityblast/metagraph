@@ -1,7 +1,7 @@
 .PHONY: clean build
 
 BUILD_PATH = ./build
-BUILD_NAME = events-watcher
+BUILD_NAME = metagraph
 
 clean:
 	rm -rf $(BUILD_PATH)
