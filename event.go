@@ -27,7 +27,7 @@ type MetaPointer struct {
 	Pointer  string
 }
 
-func parseEventStruct(config *EventConfig, eventMap map[string]interface{}) (*MetaPointer, error) {
+func parseMetaPointerFromStruct(config MetaPointerConfig, eventMap map[string]interface{}) (*MetaPointer, error) {
 	raw := eventMap[config.MetaPointerField]
 	if raw == nil {
 		return nil, newInvalidFieldErr("cannot find metaPointer field", config.MetaPointerField)
@@ -52,7 +52,7 @@ func parseEventStruct(config *EventConfig, eventMap map[string]interface{}) (*Me
 	}, nil
 }
 
-func parseEventMap(config *EventConfig, eventMap map[string]interface{}) (*MetaPointer, error) {
+func parseMetaPointerFromMap(config MetaPointerConfig, eventMap map[string]interface{}) (*MetaPointer, error) {
 	var protocol *big.Int
 	if config.ProtocolField != "" {
 		var okProtocol bool
@@ -81,8 +81,8 @@ func parseEvent(config *EventConfig, data []byte) (*MetaPointer, error) {
 	}
 
 	if config.MetaPointerField != "" {
-		return parseEventStruct(config, eventMap)
+		return parseMetaPointerFromStruct(config.MetaPointerConfig, eventMap)
 	} else {
-		return parseEventMap(config, eventMap)
+		return parseMetaPointerFromMap(config.MetaPointerConfig, eventMap)
 	}
 }
