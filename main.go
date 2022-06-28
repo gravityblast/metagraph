@@ -2,11 +2,19 @@ package main
 
 import (
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/sirupsen/logrus"
 
 	"github.com/ethereum/go-ethereum/ethclient"
 )
+
+// FIXME: create a personal dedicated on pinata.cloud
+const IPFS_GATEWAY_URL = "https://ipfs.io/ipfs"
+const IPFS_CLIENT_TIMEOUT = 10
+const PIN_WORKERS = 6
 
 var logger *logrus.Entry
 
@@ -21,13 +29,29 @@ func main() {
 		log.Fatal(err)
 	}
 
-	client, err := ethclient.Dial(config.ProviderURL)
+	ethClient, err := ethclient.Dial(config.ProviderURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	ptrQueue := make(chan *MetaPointer, 10)
+	quit := make(chan struct{})
+
+	for i := 0; i < PIN_WORKERS; i++ {
+		go pinWorker(i, ptrQueue)
+	}
+
 	for _, ec := range config.Events {
-		w := newWatcher(client, ec)
+		w := newWatcher(ethClient, ec, ptrQueue)
 		w.Run()
 	}
+
+	sig := make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-sig
+		quit <- struct{}{}
+	}()
+
+	<-quit
 }

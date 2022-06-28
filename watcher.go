@@ -16,27 +16,25 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// FIXME: create a personal dedicated on pinata.cloud
-const IPFS_GATEWAY_URL = "https://ipfs.io/ipfs"
-const IPFS_CLIENT_TIMEOUT = 5
-
 type Watcher struct {
-	Client     *ethclient.Client
+	ETHClient  *ethclient.Client
 	Config     *EventConfig
 	Logger     *logrus.Entry
 	ipfsClient *http.Client
+	ptrQueue   chan *MetaPointer
 }
 
-func newWatcher(client *ethclient.Client, config *EventConfig) *Watcher {
+func newWatcher(ethClient *ethclient.Client, config *EventConfig, ptrQueue chan *MetaPointer) *Watcher {
 	ipfsClient := &http.Client{
 		Timeout: IPFS_CLIENT_TIMEOUT * time.Second,
 	}
 
 	return &Watcher{
-		Client:     client,
+		ETHClient:  ethClient,
 		Config:     config,
 		Logger:     logger.WithField("object", "watcher"),
 		ipfsClient: ipfsClient,
+		ptrQueue:   ptrQueue,
 	}
 }
 
@@ -62,7 +60,7 @@ func (w *Watcher) Run() {
 		"topic":     eventTopicId,
 	}).Info("FilterLogs")
 
-	logs, err := w.Client.FilterLogs(context.Background(), query)
+	logs, err := w.ETHClient.FilterLogs(context.Background(), query)
 	if err != nil {
 		l.Error(err.Error())
 		return
@@ -84,6 +82,8 @@ func (w *Watcher) Run() {
 			"metadataProtocol": ptr.Protocol,
 			"metadataPointer":  ptr.Pointer,
 		}).Info("metaPointer found")
+
+		w.ptrQueue <- ptr
 
 		if len(w.Config.Embedded) > 0 {
 			w.parseEmbedded(runUUID, ptr)
@@ -149,5 +149,7 @@ func (w *Watcher) parseEmbedded(runUUID uuid.UUID, ptr *MetaPointer) {
 			"metadataProtocol": ptr.Protocol,
 			"metadataPointer":  ptr.Pointer,
 		}).Info("metaPointer found")
+
+		w.ptrQueue <- ptr
 	}
 }
