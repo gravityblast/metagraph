@@ -10,18 +10,24 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-type EventConfig struct {
-	ID               string `json:"id"`
-	Description      string `json:"description"`
-	ContractName     string `json:"contractName"`
-	ContractAddress  string `json:"contractAddress"`
-	EventName        string `json:"eventName"`
+type MetaPointerConfig struct {
 	MetaPointerField string `json:"metaPointerField"`
 	ProtocolField    string `json:"protocolField"`
 	PointerField     string `json:"pointerField"`
-	StartingBlock    int64  `json:"startingBlock"`
+}
 
-	ABI abi.ABI
+type EventConfig struct {
+	ID              string `json:"id"`
+	Description     string `json:"description"`
+	ContractName    string `json:"contractName"`
+	ContractAddress string `json:"contractAddress"`
+	EventName       string `json:"eventName"`
+	StartingBlock   int64  `json:"startingBlock"`
+	ABI             abi.ABI
+
+	MetaPointerConfig
+
+	Embedded []MetaPointerConfig `json:"embedded"`
 }
 
 type Config struct {
