@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func pinWorker(workerID int, ptrQueue chan *MetaPointer) {
+func pinningWorker(workerID int, ptrQueue chan *MetaPointer) {
 	localLogger := logger.WithFields(logrus.Fields{
 		"workerID": workerID,
 		"action":   "pinWorker",
@@ -21,18 +21,19 @@ func pinWorker(workerID int, ptrQueue chan *MetaPointer) {
 
 		select {
 		case ptr := <-ptrQueue:
-			l.WithFields(logrus.Fields{
+			ptrLogger := l.WithFields(logrus.Fields{
 				"metadataProtocol": ptr.Protocol,
 				"metadataPointer":  ptr.Pointer,
-			}).Info("pinning metaPointer")
+			})
+			ptrLogger.Info("pinning metaPointer")
 
 			err := pinningClient.Pin(ptr.Pointer)
 			if err != nil {
-				l.WithFields(logrus.Fields{
+				ptrLogger.WithFields(logrus.Fields{
 					"error": err.Error(),
 				}).Error("error pinning")
 			} else {
-				l.Info("pinned")
+				ptrLogger.Info("pinned")
 			}
 		}
 	}

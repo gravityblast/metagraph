@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -27,23 +26,26 @@ func init() {
 }
 
 func main() {
+	logger.Info("started")
 	config, err := parseConfig("config.json")
 	if err != nil {
-		log.Fatal(err)
+		logger.Error("config error, ", err.Error())
+		os.Exit(1)
 	}
 
 	pinningClient = newPinningClient(config.PinataJWT)
 
 	ethClient, err := ethclient.Dial(config.ProviderURL)
 	if err != nil {
-		log.Fatal(err)
+		logger.Error("ethClient dial error, ", err.Error())
+		os.Exit(1)
 	}
 
 	ptrQueue := make(chan *MetaPointer, 10)
 	quit := make(chan struct{})
 
 	for i := 0; i < PIN_WORKERS; i++ {
-		go pinWorker(i, ptrQueue)
+		go pinningWorker(i, ptrQueue)
 	}
 
 	for _, ec := range config.Events {
