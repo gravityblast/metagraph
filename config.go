@@ -32,6 +32,7 @@ type EventConfig struct {
 
 type Config struct {
 	ProviderURL string         `json:"providerURL"`
+	PinataJWT   string         `json:pinataJWT`
 	Events      []*EventConfig `json:"events"`
 }
 

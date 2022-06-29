@@ -25,6 +25,15 @@ func pinWorker(workerID int, ptrQueue chan *MetaPointer) {
 				"metadataProtocol": ptr.Protocol,
 				"metadataPointer":  ptr.Pointer,
 			}).Info("pinning metaPointer")
+
+			err := pinningClient.Pin(ptr.Pointer)
+			if err != nil {
+				l.WithFields(logrus.Fields{
+					"error": err.Error(),
+				}).Error("error pinning")
+			} else {
+				l.Info("pinned")
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 {
   "providerURL": "wss://eth-goerli.alchemyapi.io/v2/API_KEY",
+  "pinataJWT"L: "...",
   "events": [
     {
       "id": "project-metadata-updated",

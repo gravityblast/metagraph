@@ -16,7 +16,10 @@ const IPFS_GATEWAY_URL = "https://ipfs.io/ipfs"
 const IPFS_CLIENT_TIMEOUT = 10
 const PIN_WORKERS = 6
 
-var logger *logrus.Entry
+var (
+	logger        *logrus.Entry
+	pinningClient *PinningClient
+)
 
 func init() {
 	logger = logrus.New().WithField("app", "metagraph")
@@ -28,6 +31,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	pinningClient = newPinningClient(config.PinataJWT)
 
 	ethClient, err := ethclient.Dial(config.ProviderURL)
 	if err != nil {
